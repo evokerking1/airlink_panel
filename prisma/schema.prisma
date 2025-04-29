@@ -1,134 +1,10 @@
-  generator client {
-    provider = "prisma-client-js"
-  }
-
-  datasource db {
-    provider = "sqlite"
-    url      = env("DATABASE_URL")
-  }
-
-  model Users {
-    id          Int      @id @default(autoincrement())
-    email       String   @unique
-    username    String?  @unique
-    password    String
-    isAdmin     Boolean  @default(false)
-    description String?  @default("No About Me")
-    servers     Server[]
-    permissions String?
-    loginHistory LoginHistory[]
-    apiKeys     ApiKey[]
-  }
-
-  model Session {
-    id         String   @id @default(cuid())
-    session_id String   @unique
-    data       String
-    expires    DateTime
-    createdAt  DateTime @default(now())
-    updatedAt  DateTime @updatedAt
-  }
-
-  model Server {
-    id        Int      @id @default(autoincrement())
-    UUID      String   @unique @default(uuid())
-    name      String
-    description String?
-    createdAt DateTime @default(now())
-    Ports     String
-    Memory    Int
-    Cpu       Int
-    Storage   Int
-    Variables String?
-    StartCommand String?
-    dockerImage String?
-    allowStartupEdit Boolean @default(false)
-    Installing Boolean @default(true)
-    Queued   Boolean  @default(true)
-    Suspended Boolean  @default(false)
-    ownerId   Int
-    nodeId    Int
-    imageId   Int
-    node      Node     @relation(fields: [nodeId], references: [id])
-    owner     Users    @relation(fields: [ownerId], references: [id])
-    image     Images   @relation(fields: [imageId], references: [id])
-  }
-
-model Images {
-  id          Int      @id @default(autoincrement())
-  UUID        String   @unique @default(uuid())
-  name        String?
-  description String?
-  author      String?
-  authorName  String?
-  createdAt   DateTime @default(now())
-  meta        String?
-  dockerImages String?
-  startup     String?
-  info        String?
-  scripts     String?
-  variables   String?
-
-  servers     Server[]
+generator client {
+  provider = "prisma-client-js"
 }
 
-  model Node {
-    id            Int      @id @default(autoincrement())
-    name          String
-    ram           Int      @default(0)
-    cpu           Int      @default(0)
-    disk          Int      @default(0)
-    address       String   @default("127.0.0.1")
-    port          Int      @default(3001)
-    key           String
-    createdAt     DateTime @default(now())
-    allocatedPorts String?  @default("[]") // JSON array of allocated ports
-    servers       Server[]
-  }
-
-model settings {
-  id          Int      @id @default(autoincrement())
-  title       String @default("Airlink")
-  description String @default("AirLink is a free and open source project by AirlinkLabs")
-  logo      String @default("../assets/logo.png")
-  favicon   String @default("../assets/favicon.ico")
-  theme     String @default("default")
-  language  String @default("en")
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model ApiKey {
-  id          Int      @id @default(autoincrement())
-  name        String
-  key         String   @unique
-  description String?
-  permissions String   @default("[]")
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  active      Boolean  @default(true)
-  userId      Int?
-  user        Users?   @relation(fields: [userId], references: [id])
-}
-
-model LoginHistory {
-  id        Int      @id @default(autoincrement())
-  userId    Int
-  user      Users    @relation(fields: [userId], references: [id])
-  ipAddress String?
-  userAgent String?
-  timestamp DateTime @default(now())
-}
-
-model PlayerStats {
-  id           Int      @id @default(autoincrement())
-  timestamp    DateTime @default(now())
-  totalPlayers Int      @default(0)
-  maxPlayers   Int      @default(0)
-  onlineServers Int     @default(0)
-  totalServers Int      @default(0)
-
-  @@index([timestamp])
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
 }
 
 model Addon {
@@ -141,5 +17,132 @@ model Addon {
   enabled     Boolean  @default(true)
   mainFile    String   @default("index.ts")
   createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  updatedAt   DateTime
+}
+
+model ApiKey {
+  id          Int      @id @default(autoincrement())
+  name        String
+  key         String   @unique
+  description String?
+  permissions String   @default("[]")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime
+  active      Boolean  @default(true)
+  userId      Int?
+  Users       Users?   @relation(fields: [userId], references: [id])
+}
+
+model Images {
+  id           Int      @id @default(autoincrement())
+  UUID         String   @unique
+  name         String?
+  description  String?
+  author       String?
+  authorName   String?
+  createdAt    DateTime @default(now())
+  meta         String?
+  dockerImages String?
+  startup      String?
+  info         String?
+  scripts      String?
+  variables    String?
+  Server       Server[]
+}
+
+model LoginHistory {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  ipAddress String?
+  userAgent String?
+  timestamp DateTime @default(now())
+  Users     Users    @relation(fields: [userId], references: [id])
+}
+
+model Node {
+  id             Int      @id @default(autoincrement())
+  name           String
+  ram            Int      @default(0)
+  cpu            Int      @default(0)
+  disk           Int      @default(0)
+  address        String   @default("127.0.0.1")
+  port           Int      @default(3001)
+  key            String
+  createdAt      DateTime @default(now())
+  allocatedPorts String?  @default("[]")
+  Server         Server[]
+}
+
+model PlayerStats {
+  id            Int      @id @default(autoincrement())
+  timestamp     DateTime @default(now())
+  totalPlayers  Int      @default(0)
+  maxPlayers    Int      @default(0)
+  onlineServers Int      @default(0)
+  totalServers  Int      @default(0)
+
+  @@index([timestamp])
+}
+
+model Server {
+  id               Int      @id @default(autoincrement())
+  UUID             String   @unique
+  name             String
+  description      String?
+  createdAt        DateTime @default(now())
+  Ports            String
+  Memory           Int
+  Cpu              Int
+  Storage          Int
+  Variables        String?
+  StartCommand     String?
+  dockerImage      String?
+  allowStartupEdit Boolean  @default(false)
+  Installing       Boolean  @default(true)
+  Queued           Boolean  @default(true)
+  Suspended        Boolean  @default(false)
+  ownerId          Int
+  nodeId           Int
+  imageId          Int
+  Images           Images   @relation(fields: [imageId], references: [id])
+  Users            Users    @relation(fields: [ownerId], references: [id])
+  Node             Node     @relation(fields: [nodeId], references: [id])
+}
+
+model Session {
+  id         String   @id
+  session_id String   @unique
+  data       String
+  expires    DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime
+}
+
+model Users {
+  id           Int            @id @default(autoincrement())
+  email        String         @unique
+  username     String?        @unique
+  password     String
+  isAdmin      Boolean        @default(false)
+  description  String?        @default("No About Me")
+  permissions  String?
+  ApiKey       ApiKey[]
+  LoginHistory LoginHistory[]
+  Server       Server[]
+}
+
+model settings {
+  id          Int      @id @default(autoincrement())
+  title       String   @default("Airlink")
+  description String   @default("AirLink is a free and open source project by AirlinkLabs")
+  logo        String   @default("../assets/logo.png")
+  favicon     String   @default("../assets/favicon.ico")
+  theme       String   @default("default")
+  language    String   @default("en")
+  aiEnabled   Boolean  @default(false)
+  aiEndpoint  String   @default("https://api.epicai.fun/v1")
+  aiApiKey    String   @default("")
+  aiModel     String   @default("")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime
 }

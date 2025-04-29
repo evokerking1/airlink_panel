@@ -61,6 +61,9 @@ interface SettingsData {
   favicon?: string;
   theme?: string;
   language?: string;
+  aiEnabled?: boolean;
+  aiEndpoint?: string;
+  aiApiKey?: string;
 }
 
 const adminModule: Module = {
@@ -176,6 +179,117 @@ const adminModule: Module = {
         } catch (error) {
           logger.error('Error resetting settings:', error);
           res.status(500).json({ success: false, error: 'Failed to reset settings' });
+        }
+      },
+    );
+
+    // AI Integration Settings
+    router.get(
+      '/admin/settings/ai',
+      isAuthenticated(true),
+      async (req: Request, res: Response) => {
+        try {
+          const userId = req.session?.user?.id;
+          const user = await prisma.users.findUnique({ where: { id: userId } });
+          if (!user) {
+            return res.redirect('/login');
+          }
+
+          const settings = await prisma.settings.findUnique({
+            where: { id: 1 },
+          });
+          res.render('admin/settings/ai', { user, req, settings });
+        } catch (error) {
+          logger.error('Error fetching user:', error);
+          return res.redirect('/login');
+        }
+      },
+    );
+
+    router.post(
+      '/admin/settings/ai',
+      isAuthenticated(true),
+      async (req: Request, res: Response) => {
+        try {
+          const { aiEnabled, aiEndpoint, aiApiKey } = req.body;
+
+
+          const isEnabled = aiEnabled === true || aiEnabled === 'true';
+          const endpoint = aiEndpoint || 'https://api.openai.com/v1';
+          const apiKey = aiApiKey || '';
+          const model = req.body.aiModel || '';
+
+          await prisma.$executeRaw`
+            UPDATE settings
+            SET
+              aiEnabled = ${isEnabled ? 1 : 0},
+              aiEndpoint = ${endpoint},
+              aiApiKey = ${apiKey},
+              aiModel = ${model},
+              updatedAt = datetime('now')
+            WHERE id = 1
+          `;
+
+          res.json({ success: true });
+        } catch (error) {
+          logger.error('Error updating AI settings:', error);
+          res.status(500).json({ success: false, error: 'Failed to update AI settings' });
+        }
+      },
+    );
+
+
+    router.post(
+      '/admin/settings/ai/models',
+      isAuthenticated(true),
+      async (req: Request, res: Response) => {
+        try {
+          const { aiEndpoint, aiApiKey } = req.body;
+
+          if (!aiEndpoint) {
+            return res.status(400).json({
+              success: false,
+              error: 'Endpoint URL is required'
+            });
+          }
+
+
+          const aiService = await import('../../handlers/utils/ai/aiService');
+
+
+          const tempSettings = {
+            aiEnabled: true,
+            aiEndpoint,
+            aiApiKey: aiApiKey || '',
+            aiModel: ''
+          };
+
+
+          const originalGetSettings = aiService.getAISettings;
+          aiService.getAISettings = async () => tempSettings as any;
+
+          try {
+
+            const models = await aiService.fetchAvailableModels();
+
+
+            aiService.getAISettings = originalGetSettings;
+
+            res.json({
+              success: true,
+              models: models || []
+            });
+          } catch (error) {
+
+            aiService.getAISettings = originalGetSettings;
+            throw error;
+          }
+        } catch (error) {
+          logger.error('Error fetching AI models:', error);
+          res.status(500).json({
+            success: false,
+            error: 'Failed to fetch AI models'
+          });
         }
       },
     );

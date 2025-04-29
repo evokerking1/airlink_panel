@@ -1,26 +1,70 @@
-# Node.js modules
+# Dependencies
 node_modules/
+.pnp/
+.pnp.js
 
 # Build outputs
 dist/
+build/
+out/
 
 # Prisma files
-prisma/*
+prisma/*.db
+prisma/*.db-journal
+prisma/*.sqlite
+prisma/*.sqlite3
+prisma/dev.db
+prisma/dev.db-journal
+prisma/dev.db.backup
+prisma/dev.db.old
+prisma/dump.sql
+prisma/data_only.sql
+prisma/migrations_old/
+
+# Keep Prisma schema and migrations
 !prisma/schema.prisma
 !prisma/migrations/
 
-# Lock file
-/package-lock.json
-/pnpm-lock.yaml
-/bun.lockb
+# Environment variables
+.env
+.env.*
+!.env.example
 
 # Logs
-/logs
+logs/
 *.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
 
-# Coverage reports
+# Lock files
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+bun.lockb
+
+# Editor directories and files
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+.DS_Store
+Thumbs.db
+
+# Testing
 coverage/
+.nyc_output/
 
-# .env
-.env
-*.env.*
+# Temporary files
+.tmp/
+.temp/
+.cache/
+
+# AI-related files (uncomment if you want to ignore these)
+# src/handlers/utils/ai/
+# src/modules/api/ai.ts
+# views/admin/settings/ai.ejs
