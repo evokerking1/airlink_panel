@@ -78,7 +78,7 @@
       <!-- Daemon offline warning -->
       <% if (nodes.some(node => node.status === 'Offline')) { %>
         <div class="mt-6 ml-8 mr-8">
-          <div class="rounded-xl bg-red-600/20 dark:bg-red-800/10 px-4 py-6 shadow-lg border border-neutral-800/20">
+          <div class=" rounded-xl bg-red-600/20 dark:bg-red-800/10 px-4 py-6 shadow-lg border border-neutral-800/20">
             <div class="flex">
               <div class="flex-shrink-0 ml-1.5">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mt-2 text-red-500 dark:text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -98,7 +98,7 @@
       <% } %>
 
       <!-- Table of nodes -->
-<div class="m-4 sm:m-8" id="nodeTable">
+<div class="px-3 m-4 sm:m-8" id="nodeTable">
   <!-- Desktop Table View (hidden on mobile) -->
   <div id="desktopTable" class="overflow-hidden shadow rounded-lg border border-neutral-800/20">
     <table class="min-w-full divide-y divide-white/10">

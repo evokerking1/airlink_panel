@@ -91,34 +91,24 @@
             <% } %>
 
             <!-- Username -->
-            <label for="username" class="block text-sm font-medium text-neutral-300">Username</label>  
-              <div class="mt-1">  
-                <input type="text"  
-                  placeholder="example"  
-                  id="username"  
-                  name="username"  
-                  autocomplete="username"  
-                  required  
-                  minlength="3"  
-                  maxlength="20"  
-                  pattern="[A-Za-z0-9]{3,20}"  
-                  inputmode="text"  
-                  autocapitalize="none"  
-                  class="appearance-none block w-full px-3 py-2 bg-white text-neutral-900 border border-neutral-300 rounded-xl placeholder-neutral-400 focus:outline-none focus:ring-neutral-500 focus:border-neutral-500 transition sm:text-sm">  
+            <div>
+              <label for="username" class="block text-sm font-medium text-neutral-400"> Username </label>
+              <div class="mt-1">
+                <input placeholder="example" id="username" name="username" autocomplete="username" required class="appearance-none block w-full px-3 py-2 bg-white/10 border border-transparent rounded-xl placeholder-neutral-500 focus:outline-none focus:ring-neutral-500 focus:border-neutral-500 text-white transition sm:text-sm">
               </div>
+            </div>
 
             <!-- Email -->
             <div>
-              <label for="email" class="block text-sm font-medium text-neutral-300">Email</label>
+              <label for="email" class="block text-sm font-medium text-neutral-400"> Email </label>
               <div class="mt-1">
-                <input placeholder="example@domain.com" id="email" name="email" autocomplete="email" required
-                  class="appearance-none block w-full px-3 py-2 bg-white text-neutral-900 border border-neutral-300 rounded-xl placeholder-neutral-400 focus:outline-none focus:ring-neutral-500 focus:border-neutral-500 transition sm:text-sm">
+                <input placeholder="example@domain.com" id="email" name="email" autocomplete="email" required class="appearance-none block w-full px-3 py-2 bg-white/10 border border-transparent rounded-xl placeholder-neutral-500 focus:outline-none focus:ring-neutral-500 focus:border-neutral-500 text-white transition sm:text-sm">
               </div>
             </div>
 
             <!-- Password -->
-            <div class="space-y-1">
-              <label for="password" class="block text-sm font-medium text-neutral-300">Password</label>
+           <div class="space-y-1">
+              <label for="password" class="block text-sm font-medium text-neutral-400">Password</label>
               <div class="mt-1">
                 <input
                   placeholder="********"
@@ -127,7 +117,7 @@
                   type="password"
                   autocomplete="new-password"
                   required
-                  class="appearance-none block w-full px-3 py-2 bg-white text-neutral-900 border border-neutral-300 rounded-xl placeholder-neutral-400 focus:outline-none focus:ring-neutral-500 focus:border-neutral-500 transition sm:text-sm"
+                  class="appearance-none block w-full px-3 py-2 bg-white/10 border border-transparent rounded-xl placeholder-neutral-500 focus:outline-none focus:ring-neutral-500 focus:border-neutral-500 text-white transition sm:text-sm"
                 >
               </div>
             </div>
@@ -141,11 +131,10 @@
       </div>
       <!-- BOXED CARD END -->
 
-      <div class="mt-6 text-sm text-neutral-300">
-        Already have an account? <a href="/login" class="font-normal text-neutral-300 hover:text-white transition">Sign in</a>
+      <div class="mt-6 text-sm text-neutral-500">
+        Already have an account? <a href="/login" class="font-normal text-neutral-500 hover:text-white transition ">Sign in</a>
       </div>
     </div>
-  </div>
 
   <!-- desktop side image -->
   <div class="hidden lg:block relative w-0 flex-1">
